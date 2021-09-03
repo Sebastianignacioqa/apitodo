@@ -1,112 +1,141 @@
 import './App.css';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Todolist from './todolist';
 
 
 function App() {
 
-
   const [lista, setLista] = useState([]);
+  const [tarea, setTarea] = useState("");
+  const [loading, setLoading] = useState(false)
+  
+  useEffect(() => {
+    recibirLista()
+  }, [])
 
-  const [loading, setLoading] = useState(false); //este estado se realiza porque la informacion de Fetch demora en llegar.
+  useEffect(() => {
+    actualizarLista()
+  }, []);
 
-const actualizarLista = () => {   
 
-  fetch('https://assets.breatheco.de/apis/fake/todos/user/sebastianignacioqa', {
-    method: "PUT",
-    body: JSON.stringify([
+  const actualizarLista = () => {
+    
 
-        {label: "Probando tareas", done:false},
+    fetch('https://assets.breatheco.de/apis/fake/todos/user/sebastianignacioqa', {
+      method: "PUT",
+      body: JSON.stringify([
         
-      ]), //Pasamos las tareas
+        ...lista
+      ]), //Pasamos las tareas al fetch
       headers: {
-      "Content-Type": "application/json"
-    }
-  })
-  .then(resp => {
-      return resp.json(); 
-  })
-  .then(data => {
-      
-      console.log(data); 
-  })
-  .catch(error => {
-      
-      console.log(error);
-  });}
+        "Content-Type": "application/json"
+      }
+    })
+      .then(resp => {
+        return resp.json();
+      })
+      .then(data => {
+
+        console.log(data);
+      })
+      .catch(error => {
+
+        console.log(error);
+      });
+  }
+
+  const handleChange = (evento) => {
+    setTarea(evento.target.value)
+    
+  }
+
+
+
+  const recibirLista = () => {
+
+    
+
+    fetch('https://assets.breatheco.de/apis/fake/todos/user/sebastianignacioqa', {
+      method: "GET",
+      headers: {
+        "content-type": "application/json"
+      }
+    })
+      .then(resp => {
+        return resp.json();
+      })
+      .then(data => {
+
+        setLista(data);
+      })
+      .catch(error => {
+
+        console.log(error);
+      });
+  }
+
+
+
+
+  //const handleKey = (evento) => {
+  //let newArray = [
+  //...lista, 
+  //{label: evento.target.value, done:false},
+  //]}
+
+  const handleSubmit = (evento) => {
+
+    evento.preventDefault();
+    
+  
+    const newLista = lista;
+
+    newLista.push({label: tarea, done:false})
+    setLista([...newLista])
+
+    console.log(lista)
+    setTarea([])
+    actualizarLista()
+
+  }
 
   const eliminarTarea = () => {
 
-    setLista([])
+    setLista([]);
 
   }
 
-  useEffect(() => {
 
-    cargarInfo()
-
-
-  }, []);
-
-  const cargarInfo = () => {
-    setLoading(true) //Acá estamos diciendo que está cargando el fetch
-
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/sebastianignacioqa", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" }
-    }).then(response =>
-      response.json())
-
-      .then(data => {
-
-        setLista(data.map(t => t.label));
-        setLoading(false);
-      })
-
-      .catch(error => console.log(error))
-  };
-
-  const [tarea, setTarea] = useState ("");
-
-  const handleSubmit = (evento) => {
-      
-      evento.preventDefault();   
-      setTarea(evento.target.value);
-      console.log(tarea);
-  }
- 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <div className="form-row">
-        <div className="col">
-        <input type="text" className="form-control" placeholder="Ingresar tarea aqui" onChange={handleSubmit} value={tarea}/>
-        <button type="Submit">Submit</button>
+          <div className="col">
+            <input type="text" className="form-control" placeholder="Ingresar tarea aqui" onChange={handleChange} value={tarea} />
+            
+          </div>
         </div>
-        </div>
-    </form>
+      </form>
 
       {loading ? <div className="alert alert-primary" role="alert">
         Cargando la informacion...
       </div> :
         <ul>
-          {lista.map((label, indice) => <li key={indice}>{label}</li>)}
-          <li>{tarea}</li>
-        </ul>}
-      <button className="btn btn-success" onClick={cargarInfo}>
+          {lista.map((des, indice) => <li key={indice}>{des.label}</li>)}
+        </ul> }
+      <button className="btn btn-success" onClick={recibirLista}>
         Actualizar información
       </button>
-      <button className="btn btn-danger" onClick={()=> {eliminarTarea()}}>
+      <button className="btn btn-danger" onClick={() => { eliminarTarea() }}>
         Eliminar tareas
       </button>
-      <button className="btn btn-warning" onClick={()=> {actualizarLista()}} >
+      <button className="btn btn-warning" onClick={() => { actualizarLista() }}  >
         Cargar informacion
       </button>
-      
-      
+
+
     </div>)
-    
+
 
 };
 
