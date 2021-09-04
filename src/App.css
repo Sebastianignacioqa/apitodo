@@ -1,7 +1,25 @@
 .App {
   text-align: center;
+  margin: auto;
+  width: 100%;
+  margin: auto;
+  background-color: #ddd;  
+  height: 100%;
 }
-
+body {
+  width: 100%;
+  margin: auto;
+  background-color: #ddd;  
+  height: 100%;
+}
+.container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 100%;
+  margin: auto;
+  background-color: #ddd;  
+  height: 100%;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

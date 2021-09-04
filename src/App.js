@@ -106,7 +106,8 @@ function App() {
 
 
   return (
-    <div>
+    <div className="container">
+      <h1>LISTA DE TAREAS</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-row">
           <div className="col">
@@ -119,7 +120,7 @@ function App() {
       {loading ? <div className="alert alert-primary" role="alert">
         Cargando la informacion...
       </div> :
-        <ul>
+        <ul><br></br>
           {lista.map((des, indice) => <li key={indice}>{des.label}</li>)}
         </ul> }
       <button className="btn btn-success" onClick={recibirLista}>
