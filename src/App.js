@@ -7,7 +7,7 @@ function App() {
 
   const [lista, setLista] = useState([]);
   const [tarea, setTarea] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   
   useEffect(() => {
     recibirLista()
@@ -53,8 +53,6 @@ function App() {
 
   const recibirLista = () => {
 
-    
-
     fetch('https://assets.breatheco.de/apis/fake/todos/user/sebastianignacioqa', {
       method: "GET",
       headers: {
@@ -67,6 +65,7 @@ function App() {
       .then(data => {
 
         setLista(data);
+        setLoading(false)
       })
       .catch(error => {
 
